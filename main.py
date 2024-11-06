@@ -1,3 +1,4 @@
+import math
 import tkinter as tk
 
 graph_info = [
@@ -7,6 +8,7 @@ graph_info = [
     ["D", {"C": 1}],
     ["E", {"D": 7}],
     ["F", {"A": 1}],
+    ["G", {"B": 1, "C": 1}],
 ]
 
 
@@ -40,6 +42,15 @@ def most_connections(graph_info):
     return biggest[0]
 
 
+def project_onto_circle(step, steps, r):
+    angle = math.pi * 2.0 / steps
+
+    newX = r * math.sin(angle * step)
+    newY = -r * math.cos(angle * step)
+    # canvas.create_line(200, 200, newX + 200, newY + 200)
+    return newX, newY
+
+
 class Graph:
     def __init__(self, graph_info) -> None:
         self.__graph_info = graph_info
@@ -48,11 +59,17 @@ class Graph:
     def circles_to_render(self):
         x = 50
         y = 50
+        r = 100.0
+        steps = len(self.__graph_info)
+
         circ_pos = {}
         for i, node in enumerate(self.__graph_info):
-            circ_pos[node[0]] = [x, y]
+            c_x, c_y = project_onto_circle((x % steps), steps, r)
 
-            x += 100
+            circ_pos[node[0]] = [c_x + 200, c_y + 200]
+
+            x += 1
+
             # if y <= 150:
             #     y += 100
             #
